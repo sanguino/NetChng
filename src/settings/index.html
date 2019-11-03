@@ -25,7 +25,7 @@
         </p>
           <ul>
             <li v-for="adapter in adaptersList">
-              <input type="checkbox" :id="adapter" :value="adapter" v-model="selectedAdapters">
+              <input type="checkbox" :id="adapter" :value="adapter" v-model="selectedAdapters" :checked="selectedAdapters.includes(adapter)">
               <label :for="adapter">{{adapter}}</label>
             </li>
           </ul>

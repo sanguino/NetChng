@@ -2,16 +2,25 @@ const {app, Menu, Tray} = require('electron');
 const path = require('path');
 const {menubar} = require('menubar');
 const Networksetup = require('./Networksetup.js');
+const settings = require('electron-settings');
 
-function createTemplate(list = [], openModal) {
-  const template = [{label: 'About Netchngr'}, {type: 'separator'},]
-  list.forEach(item => template.push({label: item, type: 'radio', click(e) {
+async function createTemplate(openModal) {
+  const list = await Networksetup.getList();
+  let template = [{label: 'About Netchngr'}, {type: 'separator'},];
+  const selectedAdapters = settings.has('selectedAdapters') ? settings.get('selectedAdapters') : [];
+  const filteredList = list.filter(adapter => selectedAdapters.includes(adapter));
+
+  template = template.concat(filteredList.map(item => ({label: item, type: 'radio', click(e) {
       Networksetup.orderList(e.label);
-    }}));
+    }})));
+
   template.push({type: 'separator'});
   template.push({
     label: 'Settings', click() {
-      openModal({adaptersList: list})
+      openModal({
+        adaptersList: list,
+        selectedAdapters: selectedAdapters,
+      })
     }
   });
   template.push({
@@ -27,8 +36,8 @@ class ContextMenu {
     this.iconPath = path.join(__dirname, 'assets', 'IconTemplate.png');
     this.tray = new Tray(this.iconPath);
   }
-  create (list, openModal) {
-    const template = createTemplate(list, openModal);
+  async create (openModal) {
+    const template = await createTemplate(openModal);
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
 

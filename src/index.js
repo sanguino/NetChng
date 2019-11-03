@@ -2,6 +2,7 @@ const {app, BrowserWindow, nativeTheme, globalShortcut, ipcMain} = require('elec
 
 const Networksetup = require('./Networksetup.js');
 const ContextMenu = require('./ContextMenu.js');
+const settings = require('electron-settings');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -32,7 +33,7 @@ function openModal(data) {
       win.show()
     });
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     win.on('closed', () => {
       win = null
     });
@@ -50,7 +51,7 @@ app.on('ready', () => {
   contextMenu = new ContextMenu();
 
   Networksetup.getList().then(list => {
-    contextMenu.create(list, openModal);
+    contextMenu.create(openModal);
   });
 });
 
@@ -60,5 +61,6 @@ nativeTheme.addListener('updated', () => {
 })
 
 ipcMain.on('selectedAdapters', (event, selectedAdapters) => {
-  contextMenu.create(selectedAdapters, openModal);
+  settings.set('selectedAdapters', selectedAdapters)
+  contextMenu.create(openModal);
 });

@@ -32,10 +32,10 @@ new Vue({
     });
 
     this.startOnLogin = await this.autoLaunch.isEnabled();
-    console.log(' this.autoLaunch.isEnabled()', this.startOnLogin)
 
     require('electron').ipcRenderer.on('data', (event, data) => {
       this.adaptersList = data.adaptersList;
+      this.selectedAdapters = data.selectedAdapters;
     });
 
     require('electron').ipcRenderer.on('shouldUseDarkColors', (event, shouldUseDarkColors) => {
