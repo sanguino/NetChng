@@ -17,19 +17,6 @@
     "email": "sanguino@me.com"
   },
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        }
-      ]
-    }
-  },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "lit-element": "^2.2.1",
