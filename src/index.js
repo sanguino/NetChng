@@ -1,0 +1,64 @@
+const {app, BrowserWindow, nativeTheme, globalShortcut, ipcMain} = require('electron');
+
+const Networksetup = require('./Networksetup.js');
+const ContextMenu = require('./ContextMenu.js');
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+  app.quit();
+}
+
+
+let win;
+let contextMenu;
+
+function openModal(data) {
+  if (!win) {
+    win = new BrowserWindow({
+      width: 800, height: 600,
+      //frame: false,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+      useContentSize: true,
+      modal: true, maximizable: false, fullscreenable: false, resizable: false, minimizable: false,
+      show: false,
+      backgroundColor: nativeTheme.shouldUseDarkColors ? '#2a2a2e' : '#fff'
+    });
+
+    win.on('ready-to-show', () => {
+      win.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors);
+      win.webContents.send('data', data)
+      win.show()
+    });
+
+    //win.webContents.openDevTools();
+    win.on('closed', () => {
+      win = null
+    });
+
+    win.loadURL(`file://${__dirname}/settings/index.html`)
+  } else {
+    win.show();
+  }
+}
+
+app.on('window-all-closed', e => e.preventDefault())
+
+app.on('ready', () => {
+  globalShortcut.register('CmdOrCtrl+R', () => {});
+  contextMenu = new ContextMenu();
+
+  Networksetup.getList().then(list => {
+    contextMenu.create(list, openModal);
+  });
+});
+
+
+nativeTheme.addListener('updated', () => {
+  win && win.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors)
+})
+
+ipcMain.on('selectedAdapters', (event, selectedAdapters) => {
+  contextMenu.create(selectedAdapters, openModal);
+});

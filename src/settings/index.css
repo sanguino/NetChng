@@ -1,0 +1,111 @@
+@import url('vendor/bootstrap.min.css');
+@import url('vendor/material-design-iconic-font.min.css');
+@import url('vendor/fonts.css');
+
+
+:root {
+  --menu-width: 250px;
+
+  --background-color: #262626;
+  --font-color: #CFD8DC;
+  --background-hover-color: #161616;
+  --font-hover-color: #ECEFF1;
+  --icon-bg-color: #1e1e21;
+  --selected-color: #4285f4;
+}
+
+[data-theme="light"] {
+  --background-color: #EEEEEE;
+  --font-color: #262626;
+  --background-hover-color: #f2f2f2;
+  --font-hover-color: #262626;
+  --icon-bg-color: #bbc5d6;
+  --selected-color: #4285f4;
+}
+
+
+body {
+  overflow-x: hidden;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+}
+
+li {
+  list-style-type: none;
+}
+
+#app {
+
+}
+
+#content {
+  padding-left: var(--menu-width);
+  width: 100%;
+  position: relative;
+  margin-right: 0;
+}
+
+#sidebar {
+  z-index: 1000;
+  position: absolute;
+  width: var(--menu-width);
+  height: 100%;
+  overflow-y: auto;
+  background: var(--background-color);
+}
+
+#sidebar .nav a{
+  background: none;
+  color: var(--font-color);
+  font-size: 14px;
+  padding: 10px 16px;
+  height: 50px;
+  font-weight: 400;
+}
+
+#sidebar .nav a:hover, #sidebar .nav a.active{
+  background-color: var(--background-hover-color);
+  color: var(--font-hover-color);
+  font-weight: 600;
+}
+
+#sidebar .nav a i{
+  margin-right: 16px;
+  background-color: var(--icon-bg-color);
+  height: 30px;
+  line-height: 30px;
+  width: 30px;
+  text-align: center;
+  border-radius: 3px;
+}
+
+#sidebar .nav a.active{
+  border-left: 3px solid var(--selected-color);
+  padding-left: 13px;
+}
+
+
+
+
+
+.form-group input[type="checkbox"] {
+  display: none;
+}
+
+.form-group input[type="checkbox"] + .btn-group > label span {
+  width: 20px;
+}
+
+.form-group input[type="checkbox"] + .btn-group > label span:first-child {
+  display: none;
+}
+.form-group input[type="checkbox"] + .btn-group > label span:last-child {
+  display: inline-block;
+}
+
+.form-group input[type="checkbox"]:checked + .btn-group > label span:first-child {
+  display: inline-block;
+}
+.form-group input[type="checkbox"]:checked + .btn-group > label span:last-child {
+  display: none;
+}
