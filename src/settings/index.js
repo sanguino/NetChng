@@ -1,12 +1,10 @@
-let AutoLaunch = require('auto-launch');
-
 new Vue({
   el: '#app',
   data: {
     adaptersList: [],
     section: 0,
     selectedAdapters: [],
-    startOnLogin: false
+    openAtLogin: false
   },
 
   methods: {
@@ -16,26 +14,17 @@ new Vue({
   },
 
   watch: {
-    startOnLogin: async function (val) {
-      val ? this.autoLaunch.enable() : this.autoLaunch.disable();
+    openAtLogin: async function (val) {
+      require('electron').ipcRenderer.send('openAtLogin', val);
     },
   },
 
   async beforeMount() {
 
-    this.autoLaunch = new AutoLaunch({
-      name: 'NetChng',
-      path: process.execPath,
-      mac: {
-        useLaunchAgent: true
-      }
-    });
-
-    this.startOnLogin = await this.autoLaunch.isEnabled();
-
     require('electron').ipcRenderer.on('data', (event, data) => {
       this.adaptersList = data.adaptersList;
       this.selectedAdapters = data.selectedAdapters;
+      this.openAtLogin = data.openAtLogin;
     });
 
     require('electron').ipcRenderer.on('shouldUseDarkColors', (event, shouldUseDarkColors) => {

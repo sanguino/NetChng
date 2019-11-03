@@ -4,12 +4,6 @@ const Networksetup = require('./Networksetup.js');
 const ContextMenu = require('./ContextMenu.js');
 const settings = require('electron-settings');
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit();
-}
-
-
 let win;
 let contextMenu;
 
@@ -29,7 +23,7 @@ function openModal(data) {
 
     win.on('ready-to-show', () => {
       win.webContents.send('shouldUseDarkColors', nativeTheme.shouldUseDarkColors);
-      win.webContents.send('data', data)
+      win.webContents.send('data', {...data, openAtLogin: app.getLoginItemSettings().openAtLogin});
       win.show()
     });
 
@@ -44,7 +38,7 @@ function openModal(data) {
   }
 }
 
-app.on('window-all-closed', e => e.preventDefault())
+app.on('window-all-closed', e => e.preventDefault());
 
 app.on('ready', () => {
   globalShortcut.register('CmdOrCtrl+R', () => {});
@@ -63,4 +57,8 @@ nativeTheme.addListener('updated', () => {
 ipcMain.on('selectedAdapters', (event, selectedAdapters) => {
   settings.set('selectedAdapters', selectedAdapters)
   contextMenu.create(openModal);
+});
+
+ipcMain.on('openAtLogin', (event, openAtLogin) => {
+  app.setLoginItemSettings({openAtLogin, openAsHidden: true});
 });
