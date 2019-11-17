@@ -41,7 +41,6 @@ function openModal(data) {
 app.on('window-all-closed', e => e.preventDefault());
 
 app.on('ready', () => {
-  globalShortcut.register('CmdOrCtrl+R', () => {});
   contextMenu = new ContextMenu();
 
   Networksetup.getList().then(list => {

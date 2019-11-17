@@ -1,7 +1,7 @@
 {
   "name": "netchng",
   "productName": "netchng",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "menu bar app to change network adapters order",
   "main": "src/index.js",
   "scripts": {
